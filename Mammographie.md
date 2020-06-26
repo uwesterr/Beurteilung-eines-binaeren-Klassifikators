@@ -1,4 +1,4 @@
-# Mammographie
+# Aussagekraft von Mammographie
 
 In Deutschland können Frauen zwischen 50 und 69 Jahren alle zwei Jahre zur Mammographie gehen. Die Ergenbisse sind allerdings Erklärungsbedürftig. Ein positives Testergebniss ist für sich alleine genommen kein Aussagekräftiges Indiz für eine Krebserkrankung.
 ## Beispielrechnung
