@@ -1,0 +1,21 @@
+
+.help-block {
+  font-weight: 500;
+  line-height: 1.1;
+  font-size: large;
+}
+
+body {
+  background-color: #fff;
+}
+
+p {
+  font-size: large;
+}
+button {
+  font-size: large;
+}
+
+li {
+  font-size: large;
+}
