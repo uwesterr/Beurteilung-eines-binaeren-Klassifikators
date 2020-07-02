@@ -13,10 +13,13 @@ ui <- function(request) {
     
     
     # widgets website https://shiny.rstudio.com/gallery/widget-gallery.html
-    navbarPage("Aussagekraft von Medizinischen Tests",  position = c("static-top"), theme = "bootstrap.css", 
+    navbarPage(title = h3("Aussagekraft von medizinischen Tests"),  position = c("static-top"), theme = "bootstrap.css", 
                
                tabPanel("Einstellung und Ausgabe",
     # Application title
+    tags$head(tags$style('h1 {color:blue;   text-align: center;}')),
+    
+    
     tags$head(tags$style('h3 {color:blue;}')),
     tags$head(tags$style('h2 {color:blue;}')),
     
@@ -49,38 +52,39 @@ ui <- function(request) {
             helpText("In der Wahrheitsmatrix geben die Zahlen in den grün hinterlegten Felder korrekte Testergebnisse, 
                      in den rot hinterlegten Feldern inkorrekte Anzahl von Testfällen wieder"),
             tags$hr(),
-            helpText("Je mehr Fälle inkorrekt postiv getestet werden, desto geringer ist die Relevanz da die Testperson nicht unterscheiden kann ob sie korrekt oder inkorrekt positiv getestet wurde."),
+            helpText("Je mehr Fälle inkorrekt postiv getestet werden, desto geringer ist die Positiver Vorhersagewert da die Testperson nicht unterscheiden kann ob sie korrekt oder inkorrekt positiv getestet wurde."),
         ),
         
         
         # Show a plot of the generated distribution
         mainPanel( width = 7,
             wellPanel(
-                
+                h1(textOutput("title_panel")),
                 wellPanel(
                     h2("Was bedeutet ein Testergebnis für den Getesteten?"),
+                    tags$div(id = 'placeholder'),
                     helpText("Was bedeutet ein positives bzw. negatives Testergebnis für den Getesteten?"),
-                    HTML("<strong>Relevanz:</strong> Wahrscheinlichkeit, dass der Getestete bei positivem Testergebnis positiv ist"),
+                    HTML("<strong>Positiver Vorhersagewert:</strong> Wahrscheinlichkeit, dass der Getestete bei positivem Testergebnis positiv ist"),
                     p(),
-                    HTML("<strong>Trennfähigkeit:</strong> Wahrscheinlichkeit, dass der Getestete bei negativem Testergebnis negativ ist "),
+                    HTML("<strong>Negativer Vorhersagewert:</strong> Wahrscheinlichkeit, dass der Getestete bei negativem Testergebnis negativ ist "),
                     
                     
                     fluidRow(
                         column(6,
-                               h3("Relevanz [%]"),
+                               h3("Positiver Vorhersagewert [%]"),
                                tags$head(tags$style('h5 {color:blue;}')),
                                verbatimTextOutput("PvPlus", placeholder = TRUE)),
                         column(6,
                                
-                               h3("Trennfähigkeit [%]"),
+                               h3("Negativer Vorhersagewert [%]"),
                                verbatimTextOutput("pvMinus", placeholder = TRUE)
                         ))),
                 h3("Einfluß der Basisrate"),
                 helpText("Den Einfluss der Basisrate auf
 
-Relevanz und
-Trennfähigkeit
-wird im nachfolgenden Graph verdeutlicht. Die grüne Linie zeigt den Wert der eingestellten Basisrate dar, Werte für Relevanz und Trennfähigkeit für andere Basisratenwerte können aus dem Graph abgelesen werden."),
+Positiver Vorhersagewert und
+Negativer Vorhersagewert
+wird im nachfolgenden Graph verdeutlicht. Die grüne Linie zeigt den Wert der eingestellten Basisrate dar, Werte für Positiver Vorhersagewert und Negativer Vorhersagewert für andere Basisratenwerte können aus dem Graph abgelesen werden."),
                 tags$hr(),              
                 plotlyOutput("distPlot")),
  
@@ -106,7 +110,7 @@ wird im nachfolgenden Graph verdeutlicht. Die grüne Linie zeigt den Wert der ei
 # Define server logic required to draw a histogram
 server <- function(input, output, session) {
 
-  
+    output$title_panel = renderText({"Aussagekraft eines Antikörpertests"})
     output$confusionMat <-  renderPlot({
        # browser()
         total <- 1e5
@@ -204,6 +208,8 @@ server <- function(input, output, session) {
 
     
     observeEvent(input$Antikoerper, {
+        output$title_panel = renderText({"Aussagekraft eines Antikörpertests"})
+        
         updateNumericInput(session, inputId = "sensitivity", value = 94.4)  # numbers are from https://www.cegat.de/diagnostik/corona-diagnostik/
         updateNumericInput(session, inputId = "specificity", value = 99.6)
         updateNumericInput(session, inputId = "prevalence", value = 0.85) # https://www.ndr.de/nachrichten/info/coronaskript210.pdf seite 6
@@ -217,6 +223,8 @@ server <- function(input, output, session) {
     
     
     observeEvent(input$Mammographie, {
+        output$title_panel = renderText({"Aussagekraft einer Mammographie"})
+        
         #https://www.laekh.de/images/Hessisches_Aerzteblatt/2016/12_2016/CME_12_2016_Was_Aerzte_wissen_muessen.pdf
         updateNumericInput(session, inputId = "sensitivity", value = 90)  # numbers are from https://www.cegat.de/diagnostik/corona-diagnostik/
         updateNumericInput(session, inputId = "specificity", value = 91)
@@ -226,9 +234,14 @@ server <- function(input, output, session) {
             withMathJax(
                 includeMarkdown(file))
         })
+        
+
+        
     })
     
     observeEvent(input$PSA, {
+        output$title_panel = renderText({"Aussagekraft eines PSA-Tests"})
+        
         updateNumericInput(session, inputId = "sensitivity", value = 91)  
         updateNumericInput(session, inputId = "specificity", value = 91)
         updateNumericInput(session, inputId = "prevalence", value = 0.1) # https://www.prostata.de/prostatakrebs/was-ist-pca/haeufigkeit-des-prostatakarzinoms
@@ -253,27 +266,25 @@ server <- function(input, output, session) {
                              pvPlus = (prevalence*sensitivity)/((prevalence*sensitivity)+(1-prevalence)*(1-specificity)),
                              pvMinus = ((1-prevalence)*specificity)/(((1-prevalence)*specificity)+(prevalence*(1-sensitivity)))
         ) 
-        output$PvPlus <- renderText({ data_point$Relevanz %>% round(digits = 6) *100})
-        output$pvMinus <- renderText({ data_point$Trennfähigkeit %>% round(digits = 6) *100})
+        output$PvPlus <- renderText({ data_point$Positiver_Vorhersagewert %>% round(digits = 6) *100})
+        output$pvMinus <- renderText({ data_point$Negativer_Vorhersagewert %>% round(digits = 6) *100})
        # browser()
         colnames(data)[colnames(data) == "prevalence"] <- "Basisrate"
-        colnames(data)[colnames(data) == "pvPlus"] <- "Relevanz"
-        colnames(data)[colnames(data) == "pvMinus"] <- "Trennfähigkeit"
+        colnames(data)[colnames(data) == "pvPlus"] <- "Positiver_Vorhersagewert"
+        colnames(data)[colnames(data) == "pvMinus"] <- "Negativer_Vorhersagewert"
         
         colnames(data_point)[colnames(data_point) == "prevalence"] <- "Basisrate"
-        colnames(data_point)[colnames(data_point) == "pvPlus"] <- "Relevanz"
-        colnames(data_point)[colnames(data_point) == "pvMinus"] <- "Trennfähigkeit"
+        colnames(data_point)[colnames(data_point) == "pvPlus"] <- "Positiver_Vorhersagewert"
+        colnames(data_point)[colnames(data_point) == "pvMinus"] <- "Negativer_Vorhersagewert"
        # browser()
         # draw the histogram with the specified number of bins
-        p <-  ggplot(data, aes(x= Basisrate, Relevanz, color = "Relevanz")) + geom_line() + geom_line(aes(y = Trennfähigkeit, color = "Trennfähigkeit")) +
-            geom_point(data = data_point,aes(x = Basisrate, y = Trennfähigkeit, color = "Trennfähigkeit")) + geom_point(data = data_point,aes(x = Basisrate, y = Relevanz, color = "Relevanz")) +
+        p <-  ggplot(data, aes(x= Basisrate, Positiver_Vorhersagewert)) + geom_line(color = "red") + geom_line(aes(y = Negativer_Vorhersagewert) , color = "blue") +
+            geom_point(data = data_point,aes(x = Basisrate, y = Negativer_Vorhersagewert), color = "blue") + geom_point(data = data_point,aes(x = Basisrate, y = Positiver_Vorhersagewert), color = "red") +
             labs( y = "Wahrscheinlichkeit", x = "Basisrate") + 
-            labs(color='Vorhersagewert') + xlim(0,1) +geom_vline(aes(xintercept = data_point$Basisrate, color = "Eingestellte Basisrate")) +
-            scale_color_manual(values = c('Relevanz' = "red",'Trennfähigkeit' = "blue", 'Eingestellte Basisrate' = "green")) #+
-        #  annotate("text", x = data_point$prevalence , y = .5 , color = "red", label = "Gewählte Basisrate", angle = 90)
-        #    geom_text(x=as.numeric(data_point$prevalence %>% max()), label="the weak cars", y=.5, colour="blue", angle=90)
+            labs(color='Vorhersagewert') + xlim(0,1) +geom_vline(aes(xintercept = data_point$Basisrate) , color = "green") #+
+
         
-        p <- ggplotly(ptooltip = c("Basisrate", "Relevanz", "Trennfähigkeit"))
+        p <- ggplotly(p)
 #       p <- ggplotly(p, tooltip = c("Erfasste_Infizierte", "Berechnete_Infizierte", "Tag", "Erfasste_Todesfaelle", "Berechnete_Todesfaelle"))
 
         p <- p %>% layout(legend = list(x = 0.45, y = 0.21, font = list(size = 12)))

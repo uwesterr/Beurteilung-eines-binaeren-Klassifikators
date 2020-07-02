@@ -8,6 +8,6 @@ Bei folgenden Voraussetzungen die auch in der Betrachung im [Hessischen Ärtzebl
 - Spezivität = 91%   
 - Basisrate = 1%
 
-ergibt sich eine **Wahrscheinlichkeit für eine Erkrankung** (Positiver Vorhersagewert oder auch Relevanz) von **9.1%**
+ergibt sich eine **Wahrscheinlichkeit für eine Erkrankung** (Positiver Vorhersagewert) von **9.2%%**
 
 

@@ -34,7 +34,7 @@ Die Antwort auf die Fragestellung  **"Mit welcher Wahrscheinlickeit bin ich posi
 
 ***
  
-Wenn die Basisrate gering ist und die Spezifität nicht 100% dann wird die Relevanz aufgrund von **fehlerhaft positiven Testergebnissen** reduziert. Dies wird in der Darstellung der **Wahrheitmatrix** verdeutlicht.
+Wenn die Basisrate gering ist und die Spezifität nicht 100% dann wird der Positiver Vorhersagewert aufgrund von **fehlerhaft positiven Testergebnissen** reduziert. Dies wird in der Darstellung der **Wahrheitmatrix** verdeutlicht.
 
 ***
 
@@ -43,10 +43,10 @@ Wenn die Basisrate gering ist und die Spezifität nicht 100% dann wird die Relev
 ***
 
 Den Einfluss der Basisrate auf  
-- Relevanz und   
-- Trennfähigkeit 
+- Positiven Vorhersagewert und   
+- Negativen Vorhersagewert 
 
-wird im Graph auf der Mitte der Webseite verdeutlicht. Die grüne Linie zeigt den Wert der eingestellten Basisrate, Werte für Relevanz und Trennfähigkeit für andere Basisratenwerte können aus dem Graph abgelesen werden.
+wird im Graph auf der Mitte der Webseite verdeutlicht. Die grüne Linie zeigt den Wert der eingestellten Basisrate, Werte für den Positiven Vorhersagewert und den  Negativen Vorhersagewert für andere Basisratenwerte können aus dem Graph abgelesen werden.
 
 ***
 
@@ -70,13 +70,13 @@ Spezifität entspricht bei einer medizinischen Diagnose den Anteil der Gesunden 
 Die Basisrate ist der Anteil der Menschen aus der Stichprobe welche die Krankheit bzw. das Merkmal aufweisen.  
 Der positive Vorhersagewert profitiert von einer hohen Basisrate, der negative Vorhersagewert von einer niedrigen Basisrate. Ein positives medizinisches Testergebnis hat also eine viel höhere Aussagekraft, wenn der Test auf Verdacht durchgeführt wurde, als wenn er allein dem Screening diente.
 
-### Relevanz
+### Positiver Vorhersagewert
  Wahrscheinlichkeit das Getestete positiv ist bei positiven Testergebnis  
-$$Relevanz = \frac{Basisrate * Sensitivität}
+$$Positiver Vorhersagewert = \frac{Basisrate * Sensitivität}
 {Basisrate * Sensitivität + (1- Basisrate) * (1- Spezifität)} $$
 
-### Trennfähigkeit
+### Negativer Vorhersagewert
  Wahrscheinlichkeit das der Getestete negativ ist bei negativem Testergebnis
 
-$$ Trennfähigkeit = \frac{(1-Basisrate) * Spezifität}
+$$ Negativer Vorhersagewert = \frac{(1-Basisrate) * Spezifität}
 {(1-Basisrate) * Spezifität + (Basisrate) * (1- Sensitivität)} $$

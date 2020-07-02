@@ -23,10 +23,12 @@ data <- tibble(prevalence = prevalence,
                ) 
 
 
- ggplot(data, aes(prevalence, pvPlus, color = "Relevanz")) + geom_line() + geom_line(aes(y = pvMinus, color = "Trennfähigkeit")) +   scale_color_manual(values = c(
+p <-ggplot(data, aes(prevalence, pvPlus, color = "Relevanz")) + geom_line() + geom_line(aes(y = pvMinus, color = "Trennfähigkeit")) +   scale_color_manual(values = c(
   'Relevanz' = "red",
   'Trennfähigkeit' = "blue")) + labs( y = "Wahrscheinlichkeit", x = "Prätestwahrscheinlichkeit", title = "Beurteilung eines binären Klassifikators") + 
     labs(color='Vorhersagewert')
 
-p <- ggplotly(p, tooltip = c("Berechnet","Gemeldet", "Tag"))
+p <- ggplotly(p)
+p <- p %>% layout(legend = list(x = 0.45, y = 0.21, font = list(size = 8)))
 p
+

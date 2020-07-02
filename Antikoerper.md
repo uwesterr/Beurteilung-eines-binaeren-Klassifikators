@@ -9,5 +9,5 @@ Bei folgenden Voraussetzungen die sich auf Zahlen der Firma [CeGaT](https://www.
 - Spezivität = 99.6%  
 - Basisrate = 0.85% [Podcast Drosten, Stand 11.06.2020](https://www.ndr.de/nachrichten/info/coronaskript210.pdf)
 
-ergibt sich eine Wahrscheinlichkeit für ein Vorhandensein von Antikörpern (Relevanz) von 67%.
-Bei einem negativem Testergebnis liegt die Trennfähigkeit bei 99.95%
+ergibt sich eine Wahrscheinlichkeit für ein Vorhandensein von Antikörpern (Positiver Vorhersagewert) von 67%.
+Bei einem negativem Testergebnis liegt der Negative Vorhersagewert bei 99.95%
