@@ -53,6 +53,11 @@ ui <- function(request) {
                      in den rot hinterlegten Feldern inkorrekte Anzahl von Testfällen wieder"),
             tags$hr(),
             helpText("Je mehr Fälle inkorrekt postiv getestet werden, desto geringer ist die Positiver Vorhersagewert da die Testperson nicht unterscheiden kann ob sie korrekt oder inkorrekt positiv getestet wurde."),
+            
+            wellPanel(
+            tags$div(
+              HTML(paste("Source code available on",
+                         tags$a(href="https://github.com/uwesterr/Beurteilung-eines-binaeren-Klassifikators", "GitHub"))))),
         ),
         
         
@@ -100,7 +105,7 @@ wird im nachfolgenden Graph verdeutlicht. Die grüne Linie zeigt den Wert der ei
                     
                     # Show a plot of the generated distribution
                     mainPanel(
-                        withMathJax(includeMarkdown("Anleitung.md"))
+                        withMathJax(includeMarkdown("README.md"))
                     )
            ))        
            
