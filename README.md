@@ -34,7 +34,7 @@ Die Antwort auf die Fragestellung  **"Mit welcher Wahrscheinlickeit bin ich posi
 
 ***
  
-Wenn die Basisrate gering ist und die Spezifität nicht 100% dann wird der Positiver Vorhersagewert aufgrund von **fehlerhaft positiven Testergebnissen** reduziert. Dies wird in der Darstellung der **Wahrheitmatrix** verdeutlicht.
+Wenn die Basisrate gering ist und die Spezifität nicht 100% dann wird der Positivee Vorhersagewert aufgrund von **fehlerhaft positiven Testergebnissen** reduziert. Dies wird in der Darstellung der **Wahrheitmatrix** verdeutlicht.
 
 ***
 
