@@ -28,7 +28,7 @@ ui <- function(request) {
                       sidebarLayout(
                         
                         
-                        sidebarPanel( width = 5,
+                        sidebarPanel( width = 2,
                                       setBackgroundColor("#ECF0F5"
                                                          # color = c("#F7FBFF", "#2171B5"),
                                                          # gradient = "radial",
@@ -46,11 +46,8 @@ ui <- function(request) {
                                         actionButton("Mammographie", label = "Mammographie"),
                                         actionButton("PSA", label = "PSA")),
                                       # actionButton("Anleitung", label = "Anleitung")),
-                                      wellPanel(
-                                        h3("Wahrheitsmatrix für 100.000 Getestete "),
-                                        plotOutput("confusionMat")),
-                                      helpText("In der Wahrheitsmatrix geben die Zahlen in den grün hinterlegten Felder korrekte Testergebnisse, 
-                     in den rot hinterlegten Feldern inkorrekte Anzahl von Testfällen wieder"),
+                                      
+                                      
                                       tags$hr(),
                                       helpText("Je mehr Fälle inkorrekt postiv getestet werden, desto geringer ist die Positiver Vorhersagewert da die Testperson nicht unterscheiden kann ob sie korrekt oder inkorrekt positiv getestet wurde."),
                                       
@@ -62,7 +59,7 @@ ui <- function(request) {
                         
                         
                         # Show a plot of the generated distribution
-                        mainPanel( width = 7,
+                        mainPanel( width = 10,
                                    wellPanel(
                                      h1(textOutput("title_panel")),
                                      wellPanel(
@@ -82,15 +79,31 @@ ui <- function(request) {
                                                 
                                                 h3("Negativer Vorhersagewert [%]"),
                                                 verbatimTextOutput("pvMinus", placeholder = TRUE)
-                                         ))),
-                                     h3("Einfluß der Basisrate"),
-                                     helpText("Den Einfluss der Basisrate auf
+                                         )))),
+                                     
+                                     
+                                     tags$hr(), 
+                                   
+                                   wellPanel(
+                                     fluidRow(
+                                       column(6,
+                                              h3("Wahrheitsmatrix für 100.000 Getestete "),
+                                              plotOutput("confusionMat"),
+                                              tags$hr(), 
+                                              helpText("In der Wahrheitsmatrix geben die Zahlen in den grün hinterlegten Felder korrekte Testergebnisse, 
+                     in den rot hinterlegten Feldern inkorrekte Anzahl von Testfällen wieder")),
+                                       column(6,
+                                              h3("Einfluß der Basisrate auf Vorhersagewerte"),
+                                              plotlyOutput("distPlot"),
+                                              tags$hr(), 
+                                              helpText("Den Einfluss der Basisrate auf
 
 Positiver Vorhersagewert und
 Negativer Vorhersagewert
 wird im nachfolgenden Graph verdeutlicht. Die grüne Linie zeigt den Wert der eingestellten Basisrate dar, Werte für Positiver Vorhersagewert und Negativer Vorhersagewert für andere Basisratenwerte können aus dem Graph abgelesen werden."),
-                                     tags$hr(),              
-                                     plotlyOutput("distPlot")),
+                                       ),
+                                       
+                                     )),
                                    
                                    wellPanel(
                                      uiOutput("md_file"))
@@ -288,7 +301,7 @@ server <- function(input, output, session) {
       geom_point(data = data_point,aes(x = Basisrate, y = Positiver_Vorhersagewert, color = "Positiver Vorhersagewert")) +
       labs( y = "Wahrscheinlichkeit", x = "Basisrate") + 
       labs(color='Vorhersagewert') + xlim(0,1) +geom_vline(aes(xintercept = data_point$Basisrate , color = "Eingestellte Basisrate"))  +
-     scale_color_manual(values = c('Positiver Vorhersagewert' = "red",'Negativer Vorhersagewert' = "blue", 'Eingestellte Basisrate' = "green"))
+      scale_color_manual(values = c('Positiver Vorhersagewert' = "red",'Negativer Vorhersagewert' = "blue", 'Eingestellte Basisrate' = "green"))
     
     
     p <- ggplotly(p)
