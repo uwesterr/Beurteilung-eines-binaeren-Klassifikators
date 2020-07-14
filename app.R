@@ -13,7 +13,7 @@ ui <- function(request) {
   
   
   # widgets website https://shiny.rstudio.com/gallery/widget-gallery.html
-  navbarPage(title = h3("Aussagekraft von medizinischen Tests v. 0.1"),  position = c("static-top"), theme = "bootstrap.css", 
+  navbarPage(title = h3("Aussagekraft von medizinischen Tests v. 0.2"),  position = c("static-top"), theme = "bootstrap.css", 
              
              tabPanel("Einstellung und Ausgabe",
                       # Application title
@@ -49,7 +49,6 @@ ui <- function(request) {
                                       
                                       
                                       tags$hr(),
-                                      helpText("Je mehr Fälle inkorrekt postiv getestet werden, desto geringer ist die Positiver Vorhersagewert da die Testperson nicht unterscheiden kann ob sie korrekt oder inkorrekt positiv getestet wurde."),
                                       
                                       wellPanel(
                                         tags$div(
@@ -65,42 +64,48 @@ ui <- function(request) {
                                      wellPanel(
                                        h2("Was bedeutet ein Testergebnis für den Getesteten?"),
                                        tags$div(id = 'placeholder'),
-                                       HTML("<strong>Positiver Vorhersagewert:</strong> Wahrscheinlichkeit, dass der Getestete bei positivem Testergebnis positiv ist"),
-                                       p(),
-                                       HTML("<strong>Negativer Vorhersagewert:</strong> Wahrscheinlichkeit, dass der Getestete bei negativem Testergebnis negativ ist "),
-                                       
+                                   
                                        
                                        fluidRow(
                                          column(6,
                                                 h3("Positiver Vorhersagewert [%]"),
+                                                
+                                                HTML("<strong>Positiver Vorhersagewert:</strong> Wahrscheinlichkeit, dass der Getestete bei positivem Testergebnis positiv ist"),
+                                                
                                                 tags$head(tags$style('h5 {color:blue;}')),
                                                 verbatimTextOutput("PvPlus", placeholder = TRUE)),
                                          column(6,
-                                                
                                                 h3("Negativer Vorhersagewert [%]"),
+                                                HTML("<strong>Negativer Vorhersagewert:</strong> Wahrscheinlichkeit, dass der Getestete bei negativem Testergebnis negativ ist "),
+                                                
+                                                
                                                 verbatimTextOutput("pvMinus", placeholder = TRUE)
-                                         )))),
+                                         ))),
                                      
                                      
                                      tags$hr(), 
                                    
-                                   wellPanel(
+                                 
                                      fluidRow(
                                        column(6,
                                               h3("Wahrheitsmatrix für 100.000 Getestete "),
                                               plotOutput("confusionMat"),
                                               tags$hr(), 
                                               helpText("In der Wahrheitsmatrix geben die Zahlen in den grün hinterlegten Felder korrekte Testergebnisse, 
-                     in den rot hinterlegten Feldern inkorrekte Anzahl von Testfällen wieder")),
+                     in den rot hinterlegten Feldern inkorrekte Anzahl von Testfällen wieder."),
+                                              helpText("Je mehr Fälle inkorrekt postiv getestet werden, desto geringer ist der Positive Vorhersagewert, da die Testperson nicht unterscheiden kann, ob sie korrekt oder inkorrekt positiv getestet wurde."),
+                                       ),
                                        column(6,
-                                              h3("Einfluß der Basisrate auf Vorhersagewerte"),
+                                              h3("Einfluss der Basisrate auf Vorhersagewerte"),
                                               plotlyOutput("distPlot"),
                                               tags$hr(), 
-                                              helpText("Den Einfluss der Basisrate auf
+                                              helpText("Den Einfluss der Basisrate auf den
 
-Positiver Vorhersagewert und
-Negativer Vorhersagewert
-wird im nachfolgenden Graph verdeutlicht. Die grüne Linie zeigt den Wert der eingestellten Basisrate dar, Werte für Positiver Vorhersagewert und Negativer Vorhersagewert für andere Basisratenwerte können aus dem Graph abgelesen werden."),
+Positiven und
+Negativen Vorhersagewert
+wird im nachfolgenden Graph verdeutlicht. Die grüne Linie zeigt den Wert der eingestellten Basisrate an."),
+                                              helpText("Die Werte für Positiven und Negativen Vorhersagewert können aus dem Graph für andere Basisratenwerte abgelesen werden."),
+                                              
                                        ),
                                        
                                      )),
@@ -192,26 +197,17 @@ server <- function(input, output, session) {
     text(140, 335, classes[2], cex=2.7, srt=90)
     # add in the cmtrx results
     text(195, 400, res[1], cex=2.6, font=2, col='blue')
+    text(195, 385, "Richtig positiv", cex=2.0, font=2, col='darkgreen')
     text(195, 335, res[2], cex=2.6, font=2, col='blue')
+    text(195, 320, "Falsch negativ", cex=2.0, font=2, col='darkred')
+    
     text(295, 400, res[3], cex=2.6, font=2, col='blue')
+    text(295, 385, "Falsch positv", cex=2.0, font=2, col='darkred')
+    
     text(295, 335, res[4], cex=2.6, font=2, col='blue')
-    # add in the specifics
-    #       plot(c(100, 0), c(100, 0), type = "n", xlab="", ylab="", main = "DETAILS", xaxt='n', yaxt='n')
-    #       text(10, 85, names(cmtrx$byClass[1]), cex=1.7, font=2)
-    #       text(10, 70, round(as.numeric(cmtrx$byClass[1]), 3), cex=1.7)
-    #       text(30, 85, names(cmtrx$byClass[2]), cex=1.7, font=2)
-    #       text(30, 70, round(as.numeric(cmtrx$byClass[2]), 3), cex=1.7)
-    #       text(50, 85, names(cmtrx$byClass[5]), cex=1.7, font=2)
-    #       text(50, 70, round(as.numeric(cmtrx$byClass[5]), 3), cex=1.7)
-    #       text(70, 85, names(cmtrx$byClass[6]), cex=1.7, font=2)
-    #       text(70, 70, round(as.numeric(cmtrx$byClass[6]), 3), cex=1.7)
-    #       text(90, 85, names(cmtrx$byClass[7]), cex=1.7, font=2)
-    #       text(90, 70, round(as.numeric(cmtrx$byClass[7]), 3), cex=1.7)
-    #       # add in the accuracy information
-    #       text(30, 35, names(cmtrx$overall[1]), cex=1.7, font=2)
-    #       text(30, 20, round(as.numeric(cmtrx$overall[1]), 3), cex=1.4)
-    #       text(70, 35, names(cmtrx$overall[2]), cex=1.7, font=2)
-    #       text(70, 20, round(as.numeric(cmtrx$overall[2]), 3), cex=1.4)
+    text(295, 320, "Richtig negativ", cex=2.0, font=2, col='darkgreen')
+    
+
   })
   
   
@@ -222,7 +218,7 @@ server <- function(input, output, session) {
   })
   
   
-  
+
   
   observeEvent(input$Antikoerper, {
     output$title_panel = renderText({"Aussagekraft eines Antikörpertests"})
@@ -256,13 +252,16 @@ server <- function(input, output, session) {
     
   })
   
+  
+  
   observeEvent(input$PSA, {
     output$title_panel = renderText({"Aussagekraft eines PSA-Tests"})
-    
+    isolate({
     updateNumericInput(session, inputId = "sensitivity", value = 91)  
     updateNumericInput(session, inputId = "specificity", value = 91)
     updateNumericInput(session, inputId = "prevalence", value = 0.1) # https://www.prostata.de/prostatakrebs/was-ist-pca/haeufigkeit-des-prostatakarzinoms
-    output$md_file <- renderUI({
+    })
+     output$md_file <- renderUI({
       file <-  "PSA.md"
       withMathJax(
         includeMarkdown(file))
@@ -295,11 +294,11 @@ server <- function(input, output, session) {
     colnames(data_point)[colnames(data_point) == "pvMinus"] <- "Negativer_Vorhersagewert"
     # browser()
     # draw the histogram with the specified number of bins
-    p <-  ggplot(data, aes(x= Basisrate, Positiver_Vorhersagewert)) + geom_line(aes(color = "Positiver Vorhersagewert")) + 
-      geom_line(aes(y = Negativer_Vorhersagewert , color = "Negativer Vorhersagewert")) +
-      geom_point(data = data_point,aes(x = Basisrate, y = Negativer_Vorhersagewert, color = "Negativer Vorhersagewert")) +
-      geom_point(data = data_point,aes(x = Basisrate, y = Positiver_Vorhersagewert, color = "Positiver Vorhersagewert")) +
-      labs( y = "Wahrscheinlichkeit", x = "Basisrate") + 
+    p <-  ggplot(data, aes(x= Basisrate, Positiver_Vorhersagewert*100)) + geom_line(aes(color = "Positiver Vorhersagewert")) + 
+      geom_line(aes(y = Negativer_Vorhersagewert *100, color = "Negativer Vorhersagewert")) +
+      geom_point(data = data_point,aes(x = Basisrate, y = Negativer_Vorhersagewert*100, color = "Negativer Vorhersagewert")) +
+      geom_point(data = data_point,aes(x = Basisrate, y = Positiver_Vorhersagewert*100, color = "Positiver Vorhersagewert")) +
+      labs( y = "Wahrscheinlichkeit [%]", x = "Basisrate") + 
       labs(color='Vorhersagewert') + xlim(0,1) +geom_vline(aes(xintercept = data_point$Basisrate , color = "Eingestellte Basisrate"))  +
       scale_color_manual(values = c('Positiver Vorhersagewert' = "red",'Negativer Vorhersagewert' = "blue", 'Eingestellte Basisrate' = "green"))
     
